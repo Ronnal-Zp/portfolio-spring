@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: portfolio
+
+  datasource.url: jdbc:postgresql://ep-dawn-breeze-ah1zo3eb-pooler.c-3.us-east-1.aws.neon.tech/portfoliodb?sslmode=require&channel_binding=require
+  datasource.username: neondb_owner
+  datasource.password: npg_fJ4mMsiS1dtV
+  datasource.hikari.maximun-pool-size: 10
+  datasource.hikari.connection-timeout: 20000
+
+  sql.init.mode: always
