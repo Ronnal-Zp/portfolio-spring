@@ -39,8 +39,8 @@ public class PersonalInfoRepositoryImpl implements IPersonalInfoRespository {
     public PersonalInfo save(PersonalInfo personalInfo) {
         if (personalInfo.getId()==null) {
             String sql = "INSERT INTO personal_info " +
-                    "(firts_name,last_name,title,profile_description,profile_image_url,years_of_experience,email,phone,linkedin_url,github_url) " +
-                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+                    "(first_name,last_name,title,profile_description,profile_image_url,years_of_experience,email,phone,linkedin_url,github_url) " +
+                    "VALUES (?,?,?,?,?,?,?,?,?,?)";
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(con -> {
                 PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
