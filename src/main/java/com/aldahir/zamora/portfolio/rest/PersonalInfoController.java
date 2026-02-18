@@ -39,4 +39,16 @@ public class PersonalInfoController {
         return new ResponseEntity<>(newPersonalInfo, HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<PersonalInfo> update(@PathVariable Long id, @RequestBody PersonalInfo personalInfo) {
+        personalInfo.setId(id);
+        PersonalInfo updatedPersonalInfo = personalInfoService.save(personalInfo);
+        return new ResponseEntity<>(updatedPersonalInfo, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        personalInfoService.deleteById(id);
+    }
+
 }
