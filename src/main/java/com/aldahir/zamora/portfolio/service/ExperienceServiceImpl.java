@@ -1,9 +1,14 @@
 package com.aldahir.zamora.portfolio.service;
 
+import com.aldahir.zamora.portfolio.exception.ValidationException;
 import com.aldahir.zamora.portfolio.model.Experience;
 import com.aldahir.zamora.portfolio.repository.IExperienceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,39 +18,38 @@ import java.util.Optional;
 public class ExperienceServiceImpl implements IExperienceService {
 
     private final IExperienceRepository experienceRepository;
+    private final Validator validator;
 
+    @Transactional(readOnly = true)
     @Override
     public List<Experience> findAll() {
         return experienceRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Experience> findById(Long id) {
         return experienceRepository.findById(id);
     }
 
+    @Transactional()
     @Override
     public Experience save(Experience experience) {
-        if(experience.getStartDate() == null) {
-            throw new IllegalArgumentException("La fecha de inicio de la experiencia no puede estar vacía.");
-        }
-        if(experience.getEndDate()!=null && experience.getStartDate().isAfter(experience.getEndDate())) {
-            throw new IllegalArgumentException("La fecha de inicio de la experiencia no puede ser posterior a la fecha de fin.");
-        }
-        if(experience.getJobTitle()==null || experience.getJobTitle().trim().isEmpty()) {
-            throw new IllegalArgumentException("El título del trabajo no puede estar vacío.");
-        }
-        if(experience.getCompanyName()==null || experience.getCompanyName().trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre de la compañía no puede estar vacío.");
+        BindingResult bindingResult = new BeanPropertyBindingResult(experience, "experience");
+        validator.validate(experience, bindingResult);
+        if(bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult);
         }
         return experienceRepository.save(experience);
     }
 
+    @Transactional()
     @Override
     public void deleteById(Long id) {
         experienceRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Experience> findExperienceByPersonalInfoId(Long personalInfoId) {
         return experienceRepository.findByPersonalInfoId(personalInfoId);
