@@ -3,7 +3,6 @@ package com.aldahir.zamora.portfolio.repository;
 import com.aldahir.zamora.portfolio.model.Skill;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,7 +16,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class SkillRepositoryImpl implements ISkillRespository {
+public class SkillRepositoryImpl implements ISkillRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Skill> skillRowMapper = (rs, rowNum) -> {

@@ -1,7 +1,10 @@
 package com.aldahir.zamora.portfolio.rest;
 
+import com.aldahir.zamora.portfolio.dto.SkillDto;
+import com.aldahir.zamora.portfolio.dto.SkillMapper;
 import com.aldahir.zamora.portfolio.model.Skill;
 import com.aldahir.zamora.portfolio.service.ISkillService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,31 +22,35 @@ public class SkillController {
     private ISkillService skillService;
 
     @GetMapping("/all")
-    public List<Skill> getAllSkill(){
-        return skillService.findAll();
+    public List<SkillDto> getAllSkill(){
+        return skillService.findAll().stream()
+                .map(SkillMapper::toDto)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public Skill getSkillById(@PathVariable Long id){
+    public SkillDto getSkillById(@PathVariable Long id){
         Optional<Skill> info = skillService.findById(id);
         if (info.isPresent()) {
-            return info.get();
+            return SkillMapper.toDto(info.get());
         } else  {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "skill not found");
         }
     }
 
     @PostMapping()
-    public ResponseEntity<Skill> createSkill(@RequestBody Skill skill) {
+    public ResponseEntity<SkillDto> createSkill(@ModelAttribute @Valid SkillDto skillDto) {
+        Skill skill = SkillMapper.toEntity(skillDto);
         Skill newSkill = skillService.save(skill);
-        return new ResponseEntity<>(newSkill, HttpStatus.CREATED);
+        return new ResponseEntity<>(SkillMapper.toDto(newSkill), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Skill> update(@PathVariable Long id, @RequestBody Skill skill) {
+    public ResponseEntity<SkillDto> update(@PathVariable Long id, @ModelAttribute @Valid SkillDto skillDto) {
+        Skill skill = SkillMapper.toEntity(skillDto);
         skill.setId(id);
         Skill updatedSkill = skillService.save(skill);
-        return new ResponseEntity<>(updatedSkill, HttpStatus.OK);
+        return new ResponseEntity<>(SkillMapper.toDto(updatedSkill), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

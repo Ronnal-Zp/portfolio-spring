@@ -2,7 +2,7 @@ package com.aldahir.zamora.portfolio.service;
 
 import com.aldahir.zamora.portfolio.exception.ValidationException;
 import com.aldahir.zamora.portfolio.model.Skill;
-import com.aldahir.zamora.portfolio.repository.ISkillRespository;
+import com.aldahir.zamora.portfolio.repository.ISkillRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +17,7 @@ public class SkillServiceTest {
     @Autowired
     private ISkillService skillService;
     @Autowired
-    private ISkillRespository skillRespository;
+    private ISkillRepository skillRespository;
 
 
     @Test

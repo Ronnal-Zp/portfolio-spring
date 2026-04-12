@@ -22,12 +22,14 @@ public class ProjectController {
     private final FileStorageService fileStorageService;
 
     @GetMapping("/all")
-    public List<Project> findAll() {
-        return projectService.findAll();
+    public List<ProjectDto> findAll() {
+        return projectService.findAll().stream()
+                .map(ProjectMapper::toDto)
+                .toList();
     }
 
     @PostMapping
-    public Project save(
+    public ProjectDto save(
             @ModelAttribute @Valid ProjectDto projectDto,
             @RequestParam("file") MultipartFile file
     ) {
@@ -36,7 +38,7 @@ public class ProjectController {
 
             Project p = ProjectMapper.toEntity(projectDto);
             p.setImageUrl(imageUrl);
-            return projectService.save(p);
+            return ProjectMapper.toDto(projectService.save(p));
         } catch (IOException e) {
             return null;
         }

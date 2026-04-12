@@ -1,7 +1,10 @@
 package com.aldahir.zamora.portfolio.rest;
 
 import com.aldahir.zamora.portfolio.model.Education;
+import com.aldahir.zamora.portfolio.dto.EducationDto;
+import com.aldahir.zamora.portfolio.dto.EducationMapper;
 import com.aldahir.zamora.portfolio.service.IEducationService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,31 +22,35 @@ public class EducationController {
     private final IEducationService educationService;
 
     @GetMapping("/all")
-    public List<Education> getAllEducation(){
-        return educationService.findAll();
+    public List<EducationDto> getAllEducation(){
+        return educationService.findAll().stream()
+                .map(EducationMapper::toDto)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public Education getEducationById(@PathVariable Long id){
+    public EducationDto getEducationById(@PathVariable Long id){
         Optional<Education> info = educationService.findById(id);
         if (info.isPresent()) {
-            return info.get();
+            return EducationMapper.toDto(info.get());
         } else  {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "education not found");
         }
     }
 
     @PostMapping()
-    public ResponseEntity<Education> createEducation(@RequestBody Education education) {
+    public ResponseEntity<EducationDto> createEducation(@Valid @RequestBody EducationDto educationDto) {
+        Education education = EducationMapper.toEntity(educationDto);
         Education newEducation = educationService.save(education);
-        return new ResponseEntity<>(newEducation, HttpStatus.CREATED);
+        return new ResponseEntity<>(EducationMapper.toDto(newEducation), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Education> update(@PathVariable Long id, @RequestBody Education education) {
-        education.setId(id);
+    public ResponseEntity<EducationDto> update(@PathVariable Long id, @Valid @RequestBody EducationDto educationDto) {
+        educationDto.setId(id);
+        Education education = EducationMapper.toEntity(educationDto);
         Education updatedEducation = educationService.save(education);
-        return new ResponseEntity<>(updatedEducation, HttpStatus.OK);
+        return new ResponseEntity<>(EducationMapper.toDto(updatedEducation), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

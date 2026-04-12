@@ -1,14 +1,10 @@
 package com.aldahir.zamora.portfolio.service;
 
-import com.aldahir.zamora.portfolio.exception.ValidationException;
 import com.aldahir.zamora.portfolio.model.Education;
 import com.aldahir.zamora.portfolio.repository.IEducationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +14,6 @@ import java.util.Optional;
 public class EducationServiceImpl implements IEducationService {
 
     private final IEducationRepository educationRepository;
-    private final Validator validator;
 
     @Transactional(readOnly = true)
     @Override
@@ -35,12 +30,6 @@ public class EducationServiceImpl implements IEducationService {
     @Transactional()
     @Override
     public Education save(Education education) {
-        BindingResult bindingResult = new BeanPropertyBindingResult(education, "education");
-        validator.validate(education, bindingResult);
-        if(bindingResult.hasErrors()) {
-            throw new ValidationException(bindingResult);
-        }
-
         return educationRepository.save(education);
     }
 

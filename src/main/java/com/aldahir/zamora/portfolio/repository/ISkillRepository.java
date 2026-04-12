@@ -5,7 +5,7 @@ import com.aldahir.zamora.portfolio.model.Skill;
 import java.util.List;
 import java.util.Optional;
 
-public interface ISkillRespository {
+public interface ISkillRepository {
     Skill save(Skill skill);
     Optional<Skill> findById(Long id);
     List<Skill> findAll();

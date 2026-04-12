@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class PersonalInfoRepositoryImpl implements IPersonalInfoRespository {
+public class PersonalInfoRepositoryImpl implements IPersonalInfoRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<PersonalInfo> personalInfoRowMapper = (rs, rumRow) -> {

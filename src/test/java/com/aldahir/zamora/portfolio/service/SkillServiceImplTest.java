@@ -2,7 +2,7 @@ package com.aldahir.zamora.portfolio.service;
 
 import com.aldahir.zamora.portfolio.exception.ValidationException;
 import com.aldahir.zamora.portfolio.model.Skill;
-import com.aldahir.zamora.portfolio.repository.ISkillRespository;
+import com.aldahir.zamora.portfolio.repository.ISkillRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 public class SkillServiceImplTest {
 
     @Mock
-    private ISkillRespository skillRespository;
+    private ISkillRepository skillRespository;
     @Mock
     private Validator validator;
     @InjectMocks

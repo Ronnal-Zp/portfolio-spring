@@ -1,7 +1,10 @@
 package com.aldahir.zamora.portfolio.rest;
 
 import com.aldahir.zamora.portfolio.model.Experience;
+import com.aldahir.zamora.portfolio.dto.ExperienceDto;
+import com.aldahir.zamora.portfolio.dto.ExperienceMapper;
 import com.aldahir.zamora.portfolio.service.IExperienceService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,31 +22,35 @@ public class ExperienceController {
     private IExperienceService experienceService;
 
     @GetMapping("/all")
-    public List<Experience> getAllExperience(){
-        return experienceService.findAll();
+    public List<ExperienceDto> getAllExperience(){
+        return experienceService.findAll().stream()
+                .map(ExperienceMapper::toDto)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public Experience getExperienceById(@PathVariable Long id) {
+    public ExperienceDto getExperienceById(@PathVariable Long id) {
         Optional<Experience> info = experienceService.findById(id);
         if (info.isPresent()) {
-            return info.get();
+            return ExperienceMapper.toDto(info.get());
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "experience not found");
         }
     }
 
     @PostMapping()
-    public ResponseEntity<Experience> createExperience(@RequestBody Experience experience) {
+    public ResponseEntity<ExperienceDto> createExperience(@Valid @RequestBody ExperienceDto experienceDto) {
+        Experience experience = ExperienceMapper.toEntity(experienceDto);
         Experience newExperience = experienceService.save(experience);
-        return new ResponseEntity<>(newExperience, HttpStatus.CREATED);
+        return new ResponseEntity<>(ExperienceMapper.toDto(newExperience), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Experience> update(@PathVariable Long id, @RequestBody Experience experience) {
-        experience.setId(id);
+    public ResponseEntity<ExperienceDto> update(@PathVariable Long id, @Valid @RequestBody ExperienceDto experienceDto) {
+        experienceDto.setId(id);
+        Experience experience = ExperienceMapper.toEntity(experienceDto);
         Experience updatedExperience = experienceService.save(experience);
-        return new ResponseEntity<>(updatedExperience, HttpStatus.OK);
+        return new ResponseEntity<>(ExperienceMapper.toDto(updatedExperience), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

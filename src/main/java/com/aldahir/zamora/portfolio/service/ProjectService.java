@@ -6,10 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -27,14 +23,6 @@ public class ProjectService implements IProjectService {
     @Override
     @Transactional(readOnly = true)
     public List<Project> findAll() {
-        Path path = Paths.get("C:\\devProjects\\archivo-test.txt");
-        List<String> lineas = null;
-        try {
-            lineas = Files.readAllLines(path);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        lineas.forEach(System.out::println);
         return projectRepository.findAll();
     }
 }
